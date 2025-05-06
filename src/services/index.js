@@ -1,3 +1,3 @@
 module.exports = {
-    AeroplaneSerives: require('./aeroplane-services')
+    AeroplaneServices: require('./aeroplane-services')
 }

@@ -44,6 +44,9 @@ class CrudRepository{
                 id: id
             }
         });
+        if(response[0] == 0){
+            throw new AppError('No data found', StatusCodes.NOT_FOUND);
+        }
         return response;
     }
 }

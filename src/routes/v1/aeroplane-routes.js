@@ -21,4 +21,8 @@ router.get('/:id',
 router.delete('/:id', 
     AeroplaneController.destroyAeroplane);
 
+// /api/v1/aeroplane/:id PATCH
+router.patch('/:id', 
+    AeroplaneController.updateAeroplane);
+
 module.exports = router;
