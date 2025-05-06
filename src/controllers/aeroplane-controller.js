@@ -103,6 +103,7 @@ async function updateAeroplane(req,res){
         .json({ SuccessResponse });
     }
     catch(error){
+
         ErrorResponse.message = 'Something went wrong while updating aeroplane';
         ErrorResponse.error = error;
         return res
