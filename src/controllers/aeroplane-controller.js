@@ -3,7 +3,7 @@ const { StatusCodes } = require('http-status-codes');
 const { ErrorResponse } = require('../utils/common');
 const { SuccessResponse } = require('../utils/common'); 
 
-
+// /api/v1/aeroplane POST
 async function createAeroplane(req, res) {
     try{
         const aeroplane = await AeroplaneSerives.createAeroplane({
@@ -28,7 +28,7 @@ async function createAeroplane(req, res) {
     }
 }
 
-
+// /api/v1/aeroplane GET
 async function getAeroplanes(req, res) {
     try {
         const aeroplanes = await AeroplaneSerives.getAeroplanes();
@@ -49,7 +49,31 @@ async function getAeroplanes(req, res) {
     }
 }
 
+// /api/v1/aeroplane/:id GET
+async function getAeroplane(req, res) {
+    try {
+        const aeroplanes = await AeroplaneSerives.getAeroplane(req.params.id);
+        SuccessResponse.data = aeroplanes;
+        SuccessResponse.message = 'Successfully fetched all the aeroplanes';
+
+        return res
+        .status(StatusCodes.OK)
+        .json({ SuccessResponse });
+    }
+    catch (error) {
+
+        console.log(error);
+        ErrorResponse.message = 'Something went wrong while fetching aeroplanes';
+        ErrorResponse.error = error;
+        console.log(error);
+        return res
+        .status(error.statusCode)
+        .json({ ErrorResponse });
+    }
+}
+
 module.exports = {
     createAeroplane,
-    getAeroplanes
+    getAeroplanes,
+    getAeroplane
 };
