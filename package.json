@@ -1,7 +1,7 @@
 {
-  "name": "airlines",
+  "name": "Template",
   "version": "1.0.0",
-  "description": "Airlines management system",
+  "description": "Template",
   "main": "index.js",
   "scripts": {
     "dev": "npx nodemon src/index.js"

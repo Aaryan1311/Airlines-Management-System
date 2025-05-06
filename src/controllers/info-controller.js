@@ -1,11 +1,12 @@
-const { StatusCodes } = require('http-status-codes'); 
+const { StatusCodes } = require('http-status-codes');
+const { SuccessResponse } = require('../utils/common'); 
 
 const info = (req,res) => {
-    return res.status(StatusCodes.OK).json({
-        sucess: true,
-        message: 'API is live',
-        error: {},
-        data: {}
+    SuccessResponse.message = 'API is live';
+    return res
+    .status(StatusCodes.OK)
+    .json({
+        SuccessResponse
     })
 }
 
