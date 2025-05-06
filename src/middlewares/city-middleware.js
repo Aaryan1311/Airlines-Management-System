@@ -14,6 +14,20 @@ function validateCreateRequest(req,res,next){
     next();
 }
 
+
+function validateUpdateRequest(req,res,next){
+    if(!req.body){
+        ErrorResponse.message = 'Something went wrong in updating city';
+        ErrorResponse.error = new AppError( ['City field cannot be null'], StatusCodes.BAD_REQUEST);
+        
+        return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ ErrorResponse});
+    }
+    next();
+}
+
 module.exports = {
-    validateCreateRequest
+    validateCreateRequest,
+    validateUpdateRequest
 }

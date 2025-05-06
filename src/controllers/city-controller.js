@@ -48,8 +48,31 @@ async function deleteCity(req,res){
 }
 
 
+async function updateCity(req, res) {
+    try{
+        const city = await CityServices.updateCity(req.params.id, {
+            name: req.body.name,
+        });
+        SuccessResponse.data = city;
+        SuccessResponse.message = 'Successfully updated the city';
+
+        return res
+        .status(StatusCodes.OK)
+        .json({ SuccessResponse });
+    }
+    catch(error){
+
+        ErrorResponse.message = 'Something went wrong while updating city';
+        ErrorResponse.error = error;
+        return res
+        .status(error.statusCode)
+        .json({ ErrorResponse });
+    }
+}
+
 
 module.exports = {
     createCity,
-    deleteCity
+    deleteCity,
+    updateCity
 };
