@@ -10,6 +10,6 @@ app.use('/api', apiRoutes);
 
 
 
-app.listen(ServerConfig.PORT, async () => {
+app.listen(ServerConfig.PORT, () => {
   console.log(`Server is running on port: ${ServerConfig.PORT}`);
 });
