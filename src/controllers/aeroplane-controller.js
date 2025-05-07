@@ -60,6 +60,8 @@ async function getAeroplane(req, res) {
         .json({ SuccessResponse });
     }
     catch (error) {
+
+        console.log(`this is error block ${error}`);
         ErrorResponse.message = 'Something went wrong while fetching aeroplanes';
         ErrorResponse.error = error;
         return res
