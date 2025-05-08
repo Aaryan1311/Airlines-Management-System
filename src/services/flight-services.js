@@ -26,6 +26,8 @@ async function createFlight(data) {
 async function getAllFlights(query){
     // trips  = MUM-DEL
     let customFilter = {};
+    let sortFilter =[];
+    const endingTripTime = " 23:59:59";
 
     if(query.trips){
         [departureAirportCode, arrivalAirportCode] = query.trips.split('-');
@@ -44,8 +46,26 @@ async function getAllFlights(query){
         };
     }
 
+    if(query.travellers){
+        customFilter.totalSeats = {
+            [Op.gte]: query.travellers
+        };
+    }
+
+    if(query.tripDate){
+        customFilter.departureTime = {
+            [Op.between]: [query.tripDate, query.tripDate + endingTripTime]
+        }
+    }
+
+    if(query.sort){
+        const params = query.sort.split(',');
+        const sortFilters = params.map((params) => params.split('_'));
+        sortFilter = sortFilters ;
+    }
+
     try{
-        const flights = await flightRepository.getAllFlights(customFilter);
+        const flights = await flightRepository.getAllFlights(customFilter, sortFilter);
         if(flights.length == 0){
             throw new AppError('No flights found.', StatusCodes.NOT_FOUND);
         }
