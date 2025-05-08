@@ -22,8 +22,39 @@ async function createFlight(data) {
     }
 }
 
+async function getAllFlights(query){
+    // trips  = MUM-DEL
+    let customFilter = {};
+    if(query.trips){
+        [departureAirportCode, arrivalAirportCode] = query.trips.split('-');
+        
+        customFilter = {
+            departureAirportCode: departureAirportCode,
+            arrivalAirportCode: arrivalAirportCode
+        };
+    }
+
+    try{
+        const flights = await flightRepository.getAllFlights(customFilter);
+        if(flights.length == 0){
+            throw new AppError('No flights found.', StatusCodes.NOT_FOUND);
+        }
+        if(compareTimestamps(Date.now(),flights[0].departureTime)){
+            throw new AppError('Flight Depatured', StatusCodes.BAD_REQUEST);
+        }
+        return flights;
+        
+    }
+    catch(error){
+        if(error instanceof AppError){
+            throw error;
+        }
+        throw new AppError('Cannot get flights.', StatusCodes.INTERNAL_SERVER_ERROR);
+    }
+}
 
 
 module.exports = {
     createFlight,
+    getAllFlights
 };

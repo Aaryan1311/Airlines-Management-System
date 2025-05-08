@@ -1,6 +1,7 @@
 const { StatusCodes } = require('http-status-codes');
 const { ErrorResponse } = require('../utils/common');
 const { compareTimestamps } = require('../utils/helpers/datetime-helpers');
+const { getAirportByCode } = require('../services/airport-services');
 const AppError = require('../utils/errors/app-error');
 
 function validateCreateRequest(req,res,next){
@@ -105,6 +106,69 @@ function validateCreateRequest(req,res,next){
     next();
 }
 
+function validateGetRequest(req,res,next){
+    if(!req.query){
+        ErrorResponse.message = 'Something went wrong in fetching flight details';
+        ErrorResponse.error = new AppError( ['Query cannot be null'], StatusCodes.BAD_REQUEST);
+        
+        return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ ErrorResponse});
+    }
+
+    if(!req.query.trips){
+        ErrorResponse.message = 'Something went wrong in fetching flight details';
+        ErrorResponse.error = new AppError( ['trips cannot be null'], StatusCodes.BAD_REQUEST);
+        
+        return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ ErrorResponse});
+    }
+    const [departureAirportCode, arrivalAirportCode] = req.query.trips.split('-');
+    if(!departureAirportCode || !arrivalAirportCode){
+        ErrorResponse.message = 'Something went wrong in fetching flight details';
+        ErrorResponse.error = new AppError( ['Invalid trip details'], StatusCodes.BAD_REQUEST);
+        
+        return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ ErrorResponse});
+    }
+    
+    if(departureAirportCode == arrivalAirportCode){
+        ErrorResponse.message = 'Something went wrong in fetching flight details';
+        ErrorResponse.error = new AppError( ['Invalid trip details'], StatusCodes.BAD_REQUEST);
+        
+        return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ ErrorResponse});
+    }
+
+    getAirportByCode(departureAirportCode).then((airport) => {
+        if(airport.length == 0){
+            ErrorResponse.message = 'Something went wrong in fetching flight details';
+            ErrorResponse.error = new AppError( ['Invalid Departure Airport details'], StatusCodes.BAD_REQUEST);
+            
+            return res
+            .status(StatusCodes.BAD_REQUEST)
+            .json({ ErrorResponse});
+        }
+    });
+
+    getAirportByCode(arrivalAirportCode).then((airport) => {
+        if(airport.length == 0){
+            ErrorResponse.message = 'Something went wrong in fetching flight details';
+            ErrorResponse.error = new AppError( ['Invalid Arrival Airport details'], StatusCodes.BAD_REQUEST);
+            
+            return res
+            .status(StatusCodes.BAD_REQUEST)
+            .json({ ErrorResponse});
+        }
+    });
+
+    next();
+}
+
 module.exports = {
-    validateCreateRequest
+    validateCreateRequest,
+    validateGetRequest
 }

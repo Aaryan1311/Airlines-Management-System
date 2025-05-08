@@ -31,13 +31,24 @@ async function getAirports() {
 }
 
 async function getAirport(id) {
-    console.log('hi from getAirport service');
     try {
         const airport = await airportRepository.get(id);
         return airport;
     }
     catch (error) {
-        console.log(`hi from getAirport service catch block ${error}`);
+        if(error.statusCode == StatusCodes.NOT_FOUND){
+            throw new AppError('Airport not found.', StatusCodes.NOT_FOUND);
+        }
+        throw new AppError('Cannot fetch data of the airport.', StatusCodes.INTERNAL_SERVER_ERROR);
+    }
+}
+
+async function getAirportByCode(code) {
+    try {
+        const airport = await airportRepository.getAllWithFilter({code: code});
+        return airport;
+    }
+    catch (error) {
         if(error.statusCode == StatusCodes.NOT_FOUND){
             throw new AppError('Airport not found.', StatusCodes.NOT_FOUND);
         }
@@ -83,6 +94,7 @@ module.exports = {
     createAirport,
     getAirports,
     getAirport,
+    getAirportByCode,
     destroyAirport,
     updateAirport
 };

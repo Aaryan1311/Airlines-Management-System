@@ -33,6 +33,16 @@ class CrudRepository{
         return response; 
     }
 
+    async getAllWithFilter(filter){
+        const response = await this.model.findAll({
+            where: filter
+        });
+        if(!response){
+            throw new AppError('No data found', StatusCodes.NOT_FOUND);
+        }
+        return response;  
+    }
+
     async getAll(){
         const response = await this.model.findAll();
         return response;  
