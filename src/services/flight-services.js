@@ -1,5 +1,6 @@
 const { FlightRepository } = require('../repositories');
 const { StatusCodes } = require('http-status-codes');
+const { Op } = require('sequelize');
 const { compareTimestamps } = require('../utils/helpers/datetime-helpers');
 const AppError = require('../utils/errors/app-error');
 const flightRepository = new FlightRepository();
@@ -10,7 +11,7 @@ async function createFlight(data) {
         return flight;
     }
     catch(error){
-    
+        console.log(error);
         if(error.name == 'SequelizeValidationError'){
             let explanation = [];
             error.errors.forEach((err) => {
@@ -25,12 +26,21 @@ async function createFlight(data) {
 async function getAllFlights(query){
     // trips  = MUM-DEL
     let customFilter = {};
+
     if(query.trips){
         [departureAirportCode, arrivalAirportCode] = query.trips.split('-');
-        
+
         customFilter = {
             departureAirportCode: departureAirportCode,
             arrivalAirportCode: arrivalAirportCode
+        };
+    }
+
+    if(query.price){
+        [minPrice, maxPrice] = query.price.split('-');
+
+        customFilter.price = {
+            [Op.between]: [minPrice,((maxPrice == undefined) ? 20000 : maxPrice)]
         };
     }
 
@@ -46,6 +56,7 @@ async function getAllFlights(query){
         
     }
     catch(error){
+        console.log(`this is flight-service error block ${error}`);
         if(error instanceof AppError){
             throw error;
         }

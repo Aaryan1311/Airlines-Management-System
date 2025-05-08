@@ -46,6 +46,7 @@ async function getAllFlights(req, res) {
         .json({ SuccessResponse });
     }
     catch(error){
+        console.log(`this is flight-controller error block ${error}`);
         ErrorResponse.message = 'Something went wrong while fetching flights';
         ErrorResponse.error = error;
 
