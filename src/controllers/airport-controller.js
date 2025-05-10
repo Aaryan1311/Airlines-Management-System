@@ -62,7 +62,6 @@ async function getAirport(req, res) {
         .json({ SuccessResponse });
     }
     catch (error) {
-        console.log(`this is airport error block ${error}`);
         ErrorResponse.message = 'Something went wrong while fetching airport data';
         ErrorResponse.error = error;
         return res
