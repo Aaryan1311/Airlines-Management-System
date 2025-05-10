@@ -168,7 +168,21 @@ function validateGetRequest(req,res,next){
     next();
 }
 
+function validateUpdateSeatsRequest(req,res,next){
+    if(!req.body.seats){
+        ErrorResponse.message = 'Something went wrong in updating flight details';
+        ErrorResponse.error = new AppError( ['seats cannot be null'], StatusCodes.BAD_REQUEST);
+        
+        return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ ErrorResponse});
+    }
+
+    next();
+}
+
 module.exports = {
     validateCreateRequest,
-    validateGetRequest
+    validateGetRequest,
+    validateUpdateSeatsRequest
 }
