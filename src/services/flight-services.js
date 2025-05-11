@@ -103,7 +103,8 @@ async function updateSeats(data){
         return response;
     }
     catch(error){
-        console.log(error);
+        
+        console.error('hi from the flight service block, updateerror is:', error);
         throw new AppError('Cannot update seats.', StatusCodes.INTERNAL_SERVER_ERROR);
     }
 
